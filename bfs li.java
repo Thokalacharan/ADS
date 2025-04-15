@@ -403,3 +403,74 @@ public class QuickSortFirstPivot {
         System.out.println("Sorted array: " + Arrays.toString(arr));
     }
 }
+public class Knapsack {
+    // Method to solve the 0/1 Knapsack problem
+    public static int knapsack(int[] weights, int[] values, int capacity) {
+        int n = weights.length;
+        int[][] dp = new int[n + 1][capacity + 1];
+
+        // Build table dp[][] in a bottom-up manner
+        for (int i = 1; i <= n; i++) {
+            for (int w = 1; w <= capacity; w++) {
+                if (weights[i - 1] <= w) {
+                    dp[i][w] = Math.max(values[i - 1] + dp[i - 1][w - weights[i - 1]], dp[i - 1][w]);
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        return dp[n][capacity];
+    }
+
+    // Main method to test the solution
+    public static void main(String[] args) {
+        int[] weights = {2,3,5,7,1,4,1};
+        int[] values = {10,5,15,7,6,18,3};
+        int capacity = 15;
+
+        int maxValue = knapsack(weights, values, capacity);
+        System.out.println("Maximum value that can be achieved: " + maxValue);
+    }
+}
+
+public class KnapsackBacktracking {
+
+    // Variables to store the maximum value
+    private static int maxValue = 0;
+
+    // Method to solve the 0/1 Knapsack problem using Backtracking
+    public static void knapsack(int[] weights, int[] values, int capacity, int currentIndex, int currentValue, int currentWeight) {
+        // Base case: If the weight exceeds the capacity, return
+        if (currentWeight > capacity) {
+            return;
+        }
+
+        // Update the maximum value
+        if (currentValue > maxValue) {
+            maxValue = currentValue;
+        }
+
+        // If all items are considered, return
+        if (currentIndex == weights.length) {
+            return;
+        }
+
+        // Explore including the current item
+        knapsack(weights, values, capacity, currentIndex + 1, currentValue + values[currentIndex], currentWeight + weights[currentIndex]);
+
+        // Explore excluding the current item
+        knapsack(weights, values, capacity, currentIndex + 1, currentValue, currentWeight);
+    }
+
+    // Main method to test the solution
+    public static void main(String[] args) {
+        int[] weights = {1, 2, 3, 4};
+        int[] values = {10, 20, 30, 40};
+        int capacity = 5;
+
+        knapsack(weights, values, capacity, 0, 0, 0);
+
+        System.out.println("Maximum value that can be achieved: " + maxValue);
+    }
+}
